@@ -8,7 +8,7 @@
     "start": "next start"
   },
   "dependencies": {
-    "next": "15.3.2",
+    "next": "15.5.19",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "@supabase/supabase-js": "^2.50.0",
@@ -20,7 +20,6 @@
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "typescript": "^5",
-    "tailwindcss": "^4",
-    "@tailwindcss/typography": "^0.5.16"
+    "tailwindcss": "^4"
   }
 }

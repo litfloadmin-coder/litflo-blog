@@ -4,6 +4,7 @@ import Link from "next/link";
 import { serviceClient } from "@/lib/supabase";
 import Nav from "@/components/Nav";
 import type { BlogPost } from "@/lib/supabase";
+export const dynamic = "force-dynamic";
 
 export const revalidate = 60;
 
@@ -70,7 +71,7 @@ function PostCard({ post, featured }: { post: BlogPost; featured: boolean }) {
 
   return (
     <Link href={`/blog/${post.slug}`} style={{ textDecoration: "none" }}>
-      <article style={{
+      <article className="post-card" style={{
         display: "grid",
         gridTemplateColumns: featured || !post.hero_image_url ? "1fr" : "1fr 260px",
         gap: 24,
@@ -79,16 +80,7 @@ function PostCard({ post, featured }: { post: BlogPost; featured: boolean }) {
         borderRadius: 12,
         padding: 24,
         transition: "border-color 0.2s, background 0.2s",
-      }}
-        onMouseEnter={e => {
-          (e.currentTarget as HTMLElement).style.borderColor = "rgba(107,158,122,0.4)";
-          (e.currentTarget as HTMLElement).style.background = "rgba(107,158,122,0.07)";
-        }}
-        onMouseLeave={e => {
-          (e.currentTarget as HTMLElement).style.borderColor = "rgba(107,158,122,0.15)";
-          (e.currentTarget as HTMLElement).style.background = "rgba(107,158,122,0.04)";
-        }}
-      >
+      }}>
         <div>
           {post.keywords?.[0] && (
             <span style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", color: "rgba(107,158,122,0.7)" }}>

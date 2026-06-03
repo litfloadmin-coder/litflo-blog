@@ -1,8 +1,7 @@
 import { notFound } from "next/navigation";
 import Image from "next/image";
-import ReactMarkdown from "react-markdown";
-import remarkGfm from "remark-gfm";
 import { serviceClient } from "@/lib/supabase";
+import MarkdownBody from "@/components/MarkdownBody";
 import type { BlogPost } from "@/lib/supabase";
 
 export default async function DraftPreview({ params }: { params: Promise<{ id: string }> }) {
@@ -42,15 +41,7 @@ export default async function DraftPreview({ params }: { params: Promise<{ id: s
             <Image src={post.hero_image_url} alt={post.hero_image_alt || post.title} fill style={{ objectFit: "cover" }} />
           </div>
         )}
-        <div style={{ fontSize: 15, lineHeight: 1.8, color: "rgba(217,210,195,0.8)" }}>
-          <ReactMarkdown remarkPlugins={[remarkGfm]}
-            components={{
-              h2: ({ children }) => <h2 style={{ fontSize: 19, fontWeight: 700, color: "#f0ebe2", marginTop: 32, marginBottom: 8 }}>{children}</h2>,
-              p:  ({ children }) => <p style={{ marginBottom: 16 }}>{children}</p>,
-              a:  ({ href, children }) => <a href={href} style={{ color: "rgba(107,158,122,0.9)" }}>{children}</a>,
-            }}
-          >{post.body}</ReactMarkdown>
-        </div>
+        <MarkdownBody content={post.body} />
       </div>
     </div>
   );

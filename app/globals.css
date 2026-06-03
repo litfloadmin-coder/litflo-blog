@@ -1,26 +1,17 @@
-@import "tailwindcss";
-@import "@tailwindcss/typography";
-
-:root {
-  --bg:       #0f1a14;
-  --surface:  #141f18;
-  --border:   rgba(107,158,122,0.18);
-  --green:    #6b9e7a;
-  --green-hi: #8bbf9a;
-  --text:     #d9d2c3;
-  --text-dim: rgba(217,210,195,0.55);
-  --heading:  #f0ebe2;
-}
-
 * { box-sizing: border-box; }
 
 body {
-  background: var(--bg);
-  color: var(--text);
+  background: #0f1a14;
+  color: #d9d2c3;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   margin: 0;
   -webkit-font-smoothing: antialiased;
 }
 
-a { color: var(--green-hi); text-decoration: none; }
-a:hover { color: var(--heading); }
+a { color: #8bbf9a; text-decoration: none; }
+a:hover { color: #f0ebe2; }
+
+.post-card:hover {
+  border-color: rgba(107,158,122,0.4) !important;
+  background: rgba(107,158,122,0.07) !important;
+}
