@@ -84,6 +84,13 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
           </div>
         )}
 
+        {post.infographic_svg && (
+          <div
+            style={{ margin: "0 0 36px", borderRadius: 10, overflow: "hidden", lineHeight: 0 }}
+            dangerouslySetInnerHTML={{ __html: post.infographic_svg }}
+          />
+        )}
+
         <div className="prose">
           <MarkdownBody content={post.body} />
         </div>

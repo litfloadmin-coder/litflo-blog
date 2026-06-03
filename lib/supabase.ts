@@ -10,6 +10,7 @@ export type BlogPost = {
   keywords: string[];
   hero_image_url: string | null;
   hero_image_alt: string | null;
+  infographic_svg: string | null;
   status: "pending_review" | "published" | "rejected";
   created_at: string;
   published_at: string | null;
