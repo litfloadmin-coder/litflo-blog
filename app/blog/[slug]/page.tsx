@@ -1,55 +1,36 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import { notFound } from "next/navigation";
-import { serviceClient } from "@/lib/supabase";
+import { serviceClient, type BlogPost } from "@/lib/supabase";
 import Nav from "@/components/Nav";
 import MarkdownBody from "@/components/MarkdownBody";
-import type { BlogPost } from "@/lib/supabase";
 
-export const revalidate = 60;
-
-export async function generateStaticParams() {
-  const supabase = serviceClient();
-  const { data } = await supabase
-    .from("blog_posts")
-    .select("slug")
-    .eq("status", "published");
-  return (data || []).map(p => ({ slug: p.slug }));
-}
+export const dynamic = "force-dynamic";
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params;
-  const supabase = serviceClient();
-  const { data } = await supabase.from("blog_posts").select("*").eq("slug", slug).eq("status", "published").single();
+  const { data } = await serviceClient().from("blog_posts").select("title,meta_description,keywords,hero_image_url,hero_image_alt,published_at,seo_title").eq("slug", slug).eq("status", "published").single();
   if (!data) return {};
-  const post = data as BlogPost;
   const canonical = `https://litflo.ai/blog/${slug}`;
   return {
-    title: post.seo_title || post.title,
-    description: post.meta_description || undefined,
-    keywords: post.keywords?.join(", "),
+    title: data.seo_title || data.title,
+    description: data.meta_description || undefined,
+    keywords: data.keywords?.join(", "),
     alternates: { canonical },
     openGraph: {
-      title: post.seo_title || post.title,
-      description: post.meta_description || undefined,
+      title: data.seo_title || data.title,
+      description: data.meta_description || undefined,
       url: canonical,
       type: "article",
-      publishedTime: post.published_at || undefined,
-      images: post.hero_image_url ? [{ url: post.hero_image_url, alt: post.hero_image_alt || post.title }] : [],
-    },
-    twitter: {
-      card: "summary_large_image",
-      title: post.seo_title || post.title,
-      description: post.meta_description || undefined,
-      images: post.hero_image_url ? [post.hero_image_url] : [],
+      publishedTime: data.published_at || undefined,
+      images: data.hero_image_url ? [{ url: data.hero_image_url, alt: data.hero_image_alt || data.title }] : [],
     },
   };
 }
 
 export default async function PostPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
-  const supabase = serviceClient();
-  const { data } = await supabase.from("blog_posts").select("*").eq("slug", slug).eq("status", "published").single();
+  const { data } = await serviceClient().from("blog_posts").select("*").eq("slug", slug).eq("status", "published").single();
   if (!data) notFound();
   const post = data as BlogPost;
 
@@ -67,109 +48,64 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
     author: { "@type": "Organization", name: "LitFlo", url: "https://litflo.ai" },
     publisher: { "@type": "Organization", name: "LitFlo", url: "https://litflo.ai" },
     mainEntityOfPage: { "@type": "WebPage", "@id": `https://litflo.ai/blog/${slug}` },
-    keywords: post.keywords?.join(", "),
   };
 
   return (
-    <>
-      <div style={{
-        position: "relative",
-        overflow: "hidden",
-        minHeight: "100vh",
-        background: `
-          radial-gradient(ellipse 80% 55% at 50% 10%, #344d63 0%, transparent 65%),
-          radial-gradient(ellipse 55% 45% at 15% 65%, #243a4a 0%, transparent 55%),
-          linear-gradient(170deg, #2a3f52 0%, #1c2f3d 28%, #0d1820 100%)
-        `,
-        backgroundAttachment: "fixed",
-      }}>
-      <div style={{
-        position: "absolute", inset: 0, pointerEvents: "none",
-        background: `
-          radial-gradient(ellipse 100% 38% at 50% 0%, rgba(200,220,215,0.06) 0%, transparent 60%),
-          radial-gradient(ellipse 40% 35% at 75% 55%, rgba(107,158,122,0.09) 0%, transparent 50%)
-        `,
-      }} />
-      <Nav active="blog" />
+    <div className="page-bg">
+      <div className="page-haze" />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+      <Nav active="blog" />
 
-      <main style={{ position: "relative", zIndex: 1, maxWidth: 720, margin: "0 auto", padding: "48px 24px 80px" }}>
-        {/* Breadcrumb */}
-        <p style={{ fontSize: 12, color: "rgba(217,210,195,0.4)", marginBottom: 24 }}>
-          <a href="/blog" style={{ color: "rgba(107,158,122,0.7)" }}>Blog</a>
-          {" / "}
-          <span>{post.title}</span>
+      <main style={{ position: "relative", zIndex: 1, maxWidth: 720, margin: "0 auto", padding: "40px 52px 80px" }}>
+
+        <p style={{ fontSize: 12, color: "rgba(217,210,195,0.35)", marginBottom: 24, fontWeight: 300 }}>
+          <a href="/blog" style={{ color: "rgba(107,158,122,0.6)" }}>Blog</a> / {post.title}
         </p>
 
-        {/* Keywords */}
-        {post.keywords?.[0] && (
-          <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.14em", textTransform: "uppercase", color: "rgba(107,158,122,0.7)", margin: "0 0 12px" }}>
-            {post.keywords[0]}
-          </p>
-        )}
+        {post.keywords?.[0] && <p className="keyword-chip" style={{ marginBottom: 12 }}>{post.keywords[0]}</p>}
 
-        <h1 style={{ fontFamily: "'Playfair Display', serif", fontSize: 38, fontWeight: 700, letterSpacing: "-0.02em", color: "#f0ebe2", margin: "0 0 16px", lineHeight: 1.2 }}>
+        <h1 style={{ fontFamily: "'Playfair Display', serif", fontSize: 38, fontWeight: 700, color: "#f0ebe2", marginBottom: 12, lineHeight: 1.2, letterSpacing: "-0.02em" }}>
           {post.title}
         </h1>
 
         {post.meta_description && (
-          <p style={{ fontSize: 16, fontWeight: 300, color: "rgba(217,210,195,0.6)", lineHeight: 1.75, margin: "0 0 16px" }}>
+          <p style={{ fontSize: 16, fontWeight: 300, color: "rgba(217,210,195,0.55)", lineHeight: 1.75, marginBottom: 8 }}>
             {post.meta_description}
           </p>
         )}
 
         {publishDate && (
-          <p style={{ fontSize: 13, color: "rgba(217,210,195,0.35)", marginBottom: 32 }}>{publishDate}</p>
+          <p style={{ fontSize: 12, color: "rgba(217,210,195,0.3)", marginBottom: 32, fontWeight: 300 }}>{publishDate}</p>
         )}
 
         {post.hero_image_url && (
-          <div style={{ borderRadius: 10, overflow: "hidden", marginBottom: 40, position: "relative", height: 340 }}>
+          <div style={{ borderRadius: 10, overflow: "hidden", marginBottom: 36, position: "relative", height: 320 }}>
             <Image src={post.hero_image_url} alt={post.hero_image_alt || post.title} fill style={{ objectFit: "cover" }} priority />
           </div>
         )}
 
-        {/* Post body */}
-        <MarkdownBody content={post.body} />
+        <div className="prose">
+          <MarkdownBody content={post.body} />
+        </div>
 
         {/* CTA */}
-        <div style={{
-          marginTop: 56,
-          padding: "32px 28px",
-          background: "rgba(107,158,122,0.07)",
-          border: "1px solid rgba(107,158,122,0.2)",
-          borderRadius: 12,
-          textAlign: "center",
-        }}>
-          <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.14em", textTransform: "uppercase", color: "rgba(107,158,122,0.7)", margin: "0 0 12px" }}>
-            Try LitFlo
-          </p>
-          <h3 style={{ fontSize: 20, fontWeight: 700, color: "#f0ebe2", margin: "0 0 10px", letterSpacing: "-0.02em" }}>
+        <div style={{ marginTop: 52, padding: "28px 28px", background: "rgba(107,158,122,0.06)", border: "1px solid rgba(107,158,122,0.18)", borderRadius: 12, textAlign: "center" }}>
+          <p className="keyword-chip" style={{ marginBottom: 10 }}>Try LitFlo</p>
+          <h3 style={{ fontFamily: "'Playfair Display', serif", fontSize: 20, fontWeight: 600, color: "#f0ebe2", marginBottom: 10 }}>
             Stay on top of your field automatically
           </h3>
-          <p style={{ fontSize: 14, fontWeight: 300, color: "rgba(217,210,195,0.55)", lineHeight: 1.75, margin: "0 0 20px" }}>
-            LitFlo monitors the latest papers in your research area and delivers a personalised digest to your inbox — so you never miss an important paper.
+          <p style={{ fontSize: 14, fontWeight: 300, color: "rgba(217,210,195,0.5)", lineHeight: 1.7, marginBottom: 20 }}>
+            LitFlo monitors the latest papers in your research area and delivers a personalised digest — so you never miss what matters.
           </p>
-          <a href="https://litflo.ai/account.html" style={{
-            display: "inline-block",
-            background: "rgba(107,158,122,0.2)",
-            border: "1px solid rgba(107,158,122,0.4)",
-            color: "#f0ebe2",
-            padding: "12px 28px",
-            borderRadius: 8,
-            fontSize: 14,
-            fontWeight: 500,
-            textDecoration: "none",
-            letterSpacing: "0.01em",
-          }}>
+          <a href="https://litflo.ai/account.html" style={{ display: "inline-block", background: "rgba(107,158,122,0.18)", border: "1px solid rgba(107,158,122,0.35)", color: "#f0ebe2", padding: "11px 28px", borderRadius: 8, fontSize: 14, fontWeight: 400, textDecoration: "none" }}>
             Get started free →
           </a>
         </div>
 
-        <div style={{ marginTop: 40, paddingTop: 24, borderTop: "1px solid rgba(107,158,122,0.1)" }}>
-          <a href="/blog" style={{ fontSize: 13, color: "rgba(107,158,122,0.7)" }}>← All posts</a>
+        <div style={{ marginTop: 36, paddingTop: 20, borderTop: "1px solid rgba(107,158,122,0.1)" }}>
+          <a href="/blog" style={{ fontSize: 13, color: "rgba(107,158,122,0.6)", fontWeight: 300 }}>← All posts</a>
         </div>
       </main>
-      </div>
-    </>
+    </div>
   );
 }
