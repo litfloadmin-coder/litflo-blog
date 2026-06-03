@@ -33,14 +33,31 @@ export default async function BlogIndex() {
 
   return (
     <>
+      <div style={{
+        position: "relative",
+        overflow: "hidden",
+        minHeight: "100vh",
+        background: `
+          radial-gradient(ellipse 80% 55% at 50% 10%, #344d63 0%, transparent 65%),
+          radial-gradient(ellipse 55% 45% at 15% 65%, #243a4a 0%, transparent 55%),
+          linear-gradient(170deg, #2a3f52 0%, #1c2f3d 28%, #0d1820 100%)
+        `,
+      }}>
+        <div style={{
+          position: "absolute", inset: 0, pointerEvents: "none",
+          background: `
+            radial-gradient(ellipse 100% 38% at 50% 0%, rgba(200,220,215,0.06) 0%, transparent 60%),
+            radial-gradient(ellipse 40% 35% at 75% 55%, rgba(107,158,122,0.09) 0%, transparent 50%)
+          `,
+        }} />
       <Nav active="blog" />
-      <main style={{ maxWidth: 900, margin: "0 auto", padding: "48px 24px 80px" }}>
+      <main style={{ position: "relative", zIndex: 1, maxWidth: 900, margin: "0 auto", padding: "48px 24px 80px" }}>
         {/* Header */}
         <div style={{ marginBottom: 48 }}>
           <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.14em", textTransform: "uppercase", color: "rgba(107,158,122,0.7)", margin: "0 0 12px" }}>
             LitFlo Blog
           </p>
-          <h1 style={{ fontSize: 36, fontWeight: 800, letterSpacing: "-0.03em", color: "#f0ebe2", margin: "0 0 16px", lineHeight: 1.15 }}>
+          <h1 style={{ fontFamily: "'Playfair Display', serif", fontSize: 42, fontWeight: 700, letterSpacing: "-0.02em", color: "#f0ebe2", margin: "0 0 16px", lineHeight: 1.15 }}>
             Research tools &amp; PhD productivity
           </h1>
           <p style={{ fontSize: 15, fontWeight: 300, color: "rgba(217,210,195,0.55)", lineHeight: 1.75, maxWidth: 560, margin: 0 }}>
@@ -60,6 +77,7 @@ export default async function BlogIndex() {
         )}
       </main>
       <Footer />
+      </div>
     </>
   );
 }
