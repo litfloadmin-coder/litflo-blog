@@ -10,7 +10,7 @@ export default function Nav({ active }: { active?: "blog" | "about" }) {
     }}>
       <div />
       <a href="https://litflo.ai" style={{
-        fontFamily: "'Playfair Display', serif",
+        fontFamily: "var(--font-playfair), 'Playfair Display', serif",
         fontSize: 14,
         fontWeight: 400,
         letterSpacing: "0.28em",
@@ -25,6 +25,7 @@ export default function Nav({ active }: { active?: "blog" | "about" }) {
         alignItems: "center",
         justifyContent: "flex-end",
         gap: 5,
+        fontFamily: "var(--font-dm-sans), 'DM Sans', sans-serif",
         fontSize: 13,
         fontWeight: 300,
         letterSpacing: "0.04em",
