@@ -1,4 +1,12 @@
-export default function Nav({ active }: { active?: "blog" | "about" }) {
+/* Nav — pixel-identical to the static LitFlo pages (about.html, account.html) */
+export default function Nav({ active }: { active?: "blog" }) {
+  const links = [
+    { href: "https://litflo.ai",              label: "Home" },
+    { href: "https://litflo.ai/about.html",   label: "About" },
+    { href: "https://litflo.ai/blog",         label: "Blog",    key: "blog" as const },
+    { href: "https://litflo.ai/account.html", label: "Account" },
+  ];
+
   return (
     <nav style={{
       position: "relative",
@@ -8,7 +16,10 @@ export default function Nav({ active }: { active?: "blog" | "about" }) {
       alignItems: "center",
       padding: "30px 52px",
     }}>
+      {/* left spacer */}
       <div />
+
+      {/* centered brand — Playfair Display, uppercase, wide tracking */}
       <a href="https://litflo.ai" style={{
         fontFamily: "var(--font-playfair), 'Playfair Display', serif",
         fontSize: 14,
@@ -16,43 +27,40 @@ export default function Nav({ active }: { active?: "blog" | "about" }) {
         letterSpacing: "0.28em",
         textTransform: "uppercase",
         color: "rgba(217,210,195,0.8)",
-        textAlign: "center",
-        gridColumn: 2,
         textDecoration: "none",
-      }}>LitFlo</a>
+        gridColumn: 2,
+      }}>
+        LitFlo
+      </a>
+
+      {/* right nav — DM Sans 300, 13px, letter-spacing 0.04em */}
       <div style={{
         display: "flex",
         alignItems: "center",
         justifyContent: "flex-end",
-        gap: 5,
+        gap: 0,
         fontFamily: "var(--font-dm-sans), 'DM Sans', sans-serif",
         fontSize: 13,
         fontWeight: 300,
         letterSpacing: "0.04em",
         color: "rgba(217,210,195,0.65)",
       }}>
-        {[
-          { href: "https://litflo.ai",             label: "Home" },
-          { href: "https://litflo.ai/about.html",  label: "About" },
-          { href: "https://litflo.ai/blog",        label: "Blog",    key: "blog" },
-          { href: "https://litflo.ai/account.html", label: "Account" },
-        ].map((item, i, arr) => (
-          <>
+        {links.map((link, i) => (
+          <span key={link.label} style={{ display: "flex", alignItems: "center" }}>
+            {i > 0 && (
+              <span style={{ opacity: 0.3, padding: "0 3px" }}>|</span>
+            )}
             <a
-              key={item.label}
-              href={item.href}
+              href={link.href}
               style={{
-                color: active === item.key ? "rgba(217,210,195,1)" : "inherit",
+                color: active === link.key ? "rgba(217,210,195,1)" : "inherit",
                 textDecoration: "none",
                 transition: "color 0.2s ease",
               }}
             >
-              {item.label}
+              {link.label}
             </a>
-            {i < arr.length - 1 && (
-              <span key={`sep-${i}`} style={{ opacity: 0.3, padding: "0 3px" }}>|</span>
-            )}
-          </>
+          </span>
         ))}
       </div>
     </nav>

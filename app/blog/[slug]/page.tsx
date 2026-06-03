@@ -81,6 +81,7 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
           radial-gradient(ellipse 55% 45% at 15% 65%, #243a4a 0%, transparent 55%),
           linear-gradient(170deg, #2a3f52 0%, #1c2f3d 28%, #0d1820 100%)
         `,
+        backgroundAttachment: "fixed",
       }}>
       <div style={{
         position: "absolute", inset: 0, pointerEvents: "none",

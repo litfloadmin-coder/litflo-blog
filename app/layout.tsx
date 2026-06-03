@@ -36,8 +36,8 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`${dmSans.variable} ${playfair.variable} ${caveat.variable}`}>
-      <body>{children}</body>
+    <html lang="en" className={`${dmSans.variable} ${playfair.variable} ${caveat.variable}`} style={{ background: "#0d1820" }}>
+      <body style={{ background: "#0d1820", minHeight: "100vh" }}>{children}</body>
     </html>
   );
 }
