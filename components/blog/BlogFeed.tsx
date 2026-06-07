@@ -149,7 +149,7 @@ function PostCard({ post }: { post: Post }) {
           </p>
         )}
         {date && (
-          <p style={{ fontSize: 11, color: "rgba(217,210,195,0.27)", fontWeight: 300, marginTop: "auto", paddingTop: 8 }}>
+          <p suppressHydrationWarning style={{ fontSize: 11, color: "rgba(217,210,195,0.27)", fontWeight: 300, marginTop: "auto", paddingTop: 8 }}>
             {date}
           </p>
         )}
