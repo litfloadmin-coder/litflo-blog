@@ -217,6 +217,7 @@ export default function BlogFeed({ posts }: { posts: Post[] }) {
                   fontWeight: active ? 500 : 300,
                   fontFamily: "'DM Sans', sans-serif",
                   letterSpacing: "0.04em",
+                  textTransform: "capitalize",
                   cursor: "pointer",
                   transition: "background 0.18s ease, border-color 0.18s ease, color 0.18s ease",
                 }}
