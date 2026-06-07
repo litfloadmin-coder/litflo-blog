@@ -9,10 +9,18 @@ const assetPrefix =
     ? "https://litflo-blog.vercel.app"
     : "";
 
+// Same logic for the image optimizer endpoint: when proxied via litflo.ai/blog,
+// /_next/image requests hit litflo.ai (404). Point them at the blog's own domain.
+const imagePath =
+  process.env.VERCEL_ENV === "production"
+    ? "https://litflo-blog.vercel.app/_next/image"
+    : "/_next/image";
+
 const nextConfig: NextConfig = {
   assetPrefix,
   skipTrailingSlashRedirect: true,
   images: {
+    path: imagePath,
     remotePatterns: [
       { protocol: "https", hostname: "images.unsplash.com" },
       { protocol: "https", hostname: "plus.unsplash.com" },
