@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { Suspense } from "react";
 import { serviceClient, type BlogPost } from "@/lib/supabase";
 import Nav from "@/components/Nav";
 import BlogFeed from "@/components/blog/BlogFeed";
@@ -54,9 +53,7 @@ export default async function BlogIndex() {
           </p>
         </div>
 
-        <Suspense fallback={<div style={{ color: "rgba(217,210,195,0.3)", fontSize: 14 }}>Loading…</div>}>
-          <BlogFeed posts={posts} />
-        </Suspense>
+        <BlogFeed posts={posts} />
       </main>
 
       <footer style={{ position: "relative", zIndex: 1, borderTop: "1px solid rgba(107,158,122,0.1)", padding: "28px 52px", textAlign: "center" }}>

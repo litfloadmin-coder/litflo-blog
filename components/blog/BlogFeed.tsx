@@ -2,7 +2,6 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useState, useMemo, useEffect } from "react";
-import { useSearchParams } from "next/navigation";
 
 type Post = {
   id: string;
@@ -160,7 +159,6 @@ function PostCard({ post }: { post: Post }) {
 }
 
 export default function BlogFeed({ posts }: { posts: Post[] }) {
-  const searchParams = useSearchParams();
   const [activeCategory, setActiveCategory] = useState("All Posts");
   const [page, setPage] = useState(1);
 
@@ -174,10 +172,12 @@ export default function BlogFeed({ posts }: { posts: Post[] }) {
     return cats;
   }, [posts]);
 
+  // Read ?category= from URL on mount (client-only, avoids SSR hydration mismatch)
   useEffect(() => {
-    const cat = searchParams.get("category");
+    const params = new URLSearchParams(window.location.search);
+    const cat = params.get("category");
     if (cat && categories.includes(cat)) setActiveCategory(cat);
-  }, [searchParams, categories]);
+  }, [categories]);
 
   const filtered = useMemo(() => {
     if (activeCategory === "All Posts") return posts;
